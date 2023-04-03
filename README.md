@@ -19,9 +19,9 @@ npm install fetch-firebase-types
 
 ### Config
 Make sure ton add the following values to your ```.env``` :
-```APPWRITE_ENDPOINT```
-```APPWRITE_PROJECT_ID```
-```APPWRITE_API_KEY```
+```FIREBASE_PROJECT_ID```
+```FIREBASE_PRIVATE_KEY```
+```FIREBASE_CLIENT_EMAIL```
 
 ### Usage
 ```javascript
