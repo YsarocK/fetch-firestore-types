@@ -36,7 +36,7 @@ const fetchNewTypes = async ({ outDir = './types' }: fetchParameters = {}) => {
     const documents = await col.listDocuments();
 
     for (const doc of documents) {
-      const docData = (await doc.get()).data()
+      const docData = (await doc.get()).data();
 
       for (const key in docData) {
         const value = docData[key];

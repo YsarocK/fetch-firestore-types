@@ -12,6 +12,7 @@
   "rules": {
     "no-console": 1,
     "semi-style": ["error", "last"],
-    "semi": [2, "always"]
+    "semi": [2, "always"],
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

@@ -1,43 +1,45 @@
 import { create, emit, DeclarationFlags } from 'dts-dom';
 import { createWriteStream, existsSync, mkdirSync } from 'fs';
 import findType from './utils/findType.js';
-import { databasesClient } from './utils/appwrite.js';
+import { databasesClient } from './utils/firebase.js';
 /**
  *
  * @param outDir The directory to output the types to. Defaults to "./types"
  * @param includeDBName Should exported interfaces include the database name as prefix? Defaults to false
  */
-const fetchNewTypes = async ({ outDir = './types', includeDBName = false } = {}) => {
+const fetchNewTypes = async ({ outDir = './types' } = {}) => {
     // Create folder if non-existent
     if (!existsSync(outDir)) {
         mkdirSync(outDir);
     }
     // Empty the file
-    const writeStream = createWriteStream(`${outDir}/appwrite.ts`);
+    const writeStream = createWriteStream(`${outDir}/firebase.ts`);
     writeStream.write("");
     // Iterate over all databases & collections
-    const { databases } = await databasesClient.list();
-    for (const db of databases) {
-        const { $id: databaseId, name: databaseName } = db;
-        console.log(`Fetching collection for database ${db.name}...`); // eslint-disable-line no-console
-        const { collections } = await databasesClient.listCollections(databaseId);
-        for (const col of collections) {
-            const { $id: collectionId, name: collectionName } = col;
-            console.log(`Fetching types for collection ${col.name}...`); // eslint-disable-line no-console
-            // Create interface
-            const intfName = includeDBName ? `${databaseName}${collectionName}` : collectionName;
-            const intf = create.interface(intfName, DeclarationFlags.Export);
-            const { attributes } = await databasesClient.listAttributes(databaseId, collectionId);
-            for (const attr of attributes) {
-                const attribute = JSON.parse(JSON.stringify(attr));
-                // Push attribute to interface
-                intf.members.push(create.property(attribute.key, findType(attribute), attribute.required === false && DeclarationFlags.Optional));
+    const collections = await databasesClient.listCollections();
+    for (const col of collections) {
+        const { id: collectionName } = col;
+        console.log(`Fetching types for collection ${collectionName}...`); // eslint-disable-line no-console
+        // Create interface
+        const intf = create.interface(collectionName, DeclarationFlags.Export);
+        const result = new Map();
+        const documents = await col.listDocuments();
+        for (const doc of documents) {
+            const docData = (await doc.get()).data();
+            for (const key in docData) {
+                const value = docData[key];
+                result.set(key, value);
             }
-            // Write interface to file
-            const writeStream = createWriteStream(`${outDir}/appwrite.ts`, { flags: 'a' });
-            writeStream.write(emit(intf));
         }
+        result.forEach((value, key) => {
+            // Push attribute to interface
+            intf.members.push(create.property(key, findType(value)));
+        });
+        // Write interface to file
+        const writeStream = createWriteStream(`${outDir}/firebase.ts`, { flags: 'a' });
+        writeStream.write(emit(intf));
     }
     return 'file generated successfully';
 };
+await fetchNewTypes();
 export { fetchNewTypes };

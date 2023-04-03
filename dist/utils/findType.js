@@ -4,30 +4,35 @@ import { type } from 'dts-dom';
  * @param value
  * @returns The type (dts-dom) of the value
  */
+function isInt(n) {
+    return Number(n) === n && n % 1 === 0;
+}
+function isFloat(n) {
+    return Number(n) === n && n % 1 !== 0;
+}
 const findType = (attribute) => {
     // handle null values
-    if (attribute.type === null) {
+    if (attribute === null) {
         return type.null;
+    }
+    if (attribute === undefined) {
+        return type.undefined;
     }
     // handle strings
     if (attribute.type === 'string') {
         return type.string;
     }
     // handle arrays
-    if (attribute.array === true) {
+    if (attribute instanceof Array) {
         return type.array(type.any);
-    }
-    // handle email
-    if (attribute.format && attribute.format === 'email') {
-        return type.string;
-    }
-    // handle integer & double
-    if (attribute.type === 'integer' || attribute.type === 'double') {
-        return type.number;
     }
     // handle boolean
     if (attribute.type === 'boolean') {
         return type.boolean;
+    }
+    // handle integer & double
+    if (isInt(attribute) || isFloat(attribute)) {
+        return type.number;
     }
     return type.any;
 };
