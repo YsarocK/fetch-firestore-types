@@ -1,6 +1,6 @@
 {
   "name": "fetch-firebase-types",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Firebase types file maker",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
