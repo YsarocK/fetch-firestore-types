@@ -1,7 +1,7 @@
 {
-  "name": "fetch-firebase-types",
+  "name": "fetch-firestore-types",
   "version": "0.1.5",
-  "description": "Firebase types file maker",
+  "description": "Firestore types file maker",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "type": "module",
@@ -24,7 +24,7 @@
   "bin": "dist/bin/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YsarocK/fetch-firebase-types"
+    "url": "git+https://github.com/YsarocK/fetch-firestore-types"
   },
   "files": [
     "dist/**/*"

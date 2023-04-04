@@ -13,7 +13,7 @@ const fetchNewTypes = async ({ outDir = './types' } = {}) => {
         mkdirSync(outDir);
     }
     // Empty the file
-    const writeStream = createWriteStream(`${outDir}/firebase.ts`);
+    const writeStream = createWriteStream(`${outDir}/firestore.ts`);
     writeStream.write("");
     // Iterate over all databases & collections
     const collections = await databasesClient.listCollections();
@@ -36,7 +36,7 @@ const fetchNewTypes = async ({ outDir = './types' } = {}) => {
             intf.members.push(create.property(key, findType(value)));
         });
         // Write interface to file
-        const writeStream = createWriteStream(`${outDir}/firebase.ts`, { flags: 'a' });
+        const writeStream = createWriteStream(`${outDir}/firestore.ts`, { flags: 'a' });
         writeStream.write(emit(intf));
     }
     return 'file generated successfully';

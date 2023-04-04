@@ -1,20 +1,20 @@
-# Generate Typesript file from your Firebase Databases
+# Generate Typesript file from your Firestore Databases
 
-![npm](https://img.shields.io/npm/dt/fetch-firebase-types)
-![npm](https://img.shields.io/npm/v/fetch-firebase-types)
+![npm](https://img.shields.io/npm/dt/fetch-firestore-types)
+![npm](https://img.shields.io/npm/v/fetch-firestore-types)
 
 ## Quick usage
 ```bash
-npx fetch-firebase-types
+npx fetch-firestore-types
 ```
 
 ## Installation
 ```bash
 # yarn
-yarn add fetch-firebase-types
+yarn add fetch-firestore-types
 
 # npm
-npm install fetch-firebase-types
+npm install fetch-firestore-types
 ```
 
 ### Config
@@ -25,7 +25,7 @@ Make sure ton add the following values to your ```.env``` :
 
 ### Usage
 ```javascript
-import { fetchNewTypes } from "fetch-firebase-types/dist/main";
+import { fetchNewTypes } from "fetch-firestore-types/dist/main";
 
 await fetchNewTypes();
 ```
