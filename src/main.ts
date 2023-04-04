@@ -45,12 +45,12 @@ const fetchNewTypes = async ({ outDir = './types' }: fetchParameters = {}) => {
         // handle 2nd level tree
         if (t === type.object) {
 
-          t = new Map()
+          t = new Map();
 
           for (const keyC in value) {
             const vC = value[keyC];
 
-            let tC = findType(vC);
+            const tC = findType(vC);
 
             if (!t.has(keyC)) {
               t.set(keyC, [tC]);
@@ -83,10 +83,10 @@ const fetchNewTypes = async ({ outDir = './types' }: fetchParameters = {}) => {
         if (value[0].kind) {
           t = type.array(type[value[0].type]);
         } else if (value[0] instanceof Map) {
-          const members = []
+          const members = [];
           value[0].forEach((v, k) => {
-            members.push({ name: k, kind: 'property', type: type[v] })
-          })
+            members.push({ name: k, kind: 'property', type: type[v] });
+          });
           t = create.objectType(members);
         } else {
           t = type[value[0]];
