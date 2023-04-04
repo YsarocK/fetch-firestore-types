@@ -85,7 +85,6 @@ const fetchNewTypes = async ({ outDir = './types' }: fetchParameters = {}) => {
         } else if (value[0] instanceof Map) {
           const members = []
           value[0].forEach((v, k) => {
-            console.log(v)
             members.push({ name: k, kind: 'property', type: type[v] })
           })
           t = create.objectType(members);
