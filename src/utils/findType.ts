@@ -43,6 +43,10 @@ const findType = (attribute: any) => {
     return type.number;
   }
 
+  if (typeof attribute === 'object') {
+    return type.object;
+  }
+
   return type.any;
 };
 
