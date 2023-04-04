@@ -1,6 +1,6 @@
 {
   "name": "fetch-firestore-types",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Firestore types file maker",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
