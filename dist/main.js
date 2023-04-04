@@ -23,18 +23,34 @@ const fetchNewTypes = async ({ outDir = './types' } = {}) => {
         // Create interface
         const intf = create.interface(collectionName, DeclarationFlags.Export);
         const result = new Map();
-        const documents = await col.listDocuments();
+        const { docs: documents } = await databasesClient.collection(collectionName).limit(25).get();
         for (const doc of documents) {
-            const docData = (await doc.get()).data();
+            const docData = doc.data();
             for (const key in docData) {
                 const value = docData[key];
+                let t = findType(value);
+                // handle 2nd level tree
+                if (t === type.object) {
+                    t = new Map();
+                    for (const keyC in value) {
+                        const vC = value[keyC];
+                        const tC = findType(vC);
+                        if (!t.has(keyC)) {
+                            t.set(keyC, [tC]);
+                        }
+                        else {
+                            const r = t.get(keyC);
+                            if (!JSON.stringify(r).includes(JSON.stringify(tC))) {
+                                t.set(keyC, r.concat([tC]));
+                            }
+                        }
+                    }
+                }
                 if (!result.has(key)) {
-                    result.set(key, [findType(value)
-                    ]);
+                    result.set(key, [t]);
                 }
                 else {
                     const r = result.get(key);
-                    const t = findType(value);
                     if (!JSON.stringify(r).includes(JSON.stringify(t))) {
                         result.set(key, r.concat([t]));
                     }
@@ -47,6 +63,13 @@ const fetchNewTypes = async ({ outDir = './types' } = {}) => {
                 let t = undefined;
                 if (value[0].kind) {
                     t = type.array(type[value[0].type]);
+                }
+                else if (value[0] instanceof Map) {
+                    const members = [];
+                    value[0].forEach((v, k) => {
+                        members.push({ name: k, kind: 'property', type: type[v] });
+                    });
+                    t = create.objectType(members);
                 }
                 else {
                     t = type[value[0]];

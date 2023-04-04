@@ -34,6 +34,9 @@ const findType = (attribute) => {
     if (isInt(attribute) || isFloat(attribute)) {
         return type.number;
     }
+    if (typeof attribute === 'object') {
+        return type.object;
+    }
     return type.any;
 };
 export default findType;
